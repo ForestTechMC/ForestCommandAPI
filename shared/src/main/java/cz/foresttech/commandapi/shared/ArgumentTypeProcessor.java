@@ -4,6 +4,7 @@ public interface ArgumentTypeProcessor<T> {
 
     T get(String argument);
 
+
     ArgumentTypeProcessor<String> STRING = argument -> argument;
     ArgumentTypeProcessor<Integer> INTEGER = argument -> {
         try {
