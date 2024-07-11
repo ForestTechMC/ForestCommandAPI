@@ -22,6 +22,7 @@ build {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -32,8 +33,18 @@ subprojects {
         useJUnitPlatform()
     }
 
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId project.group
+                artifactId project.name
+                version project.version
+                from components.java
+            }
+        }
+    }
+
     if (!(project.name in ['shared'])) {
-        apply plugin: 'maven-publish'
         apply plugin: 'com.github.johnrengelman.shadow'
 
         dependencies {
@@ -52,17 +63,6 @@ subprojects {
             destinationDirectory = file("$rootDir/build/libs")
 
             configurations = [project.configurations.runtimeClasspath]
-        }
-
-        publishing {
-            publications {
-                maven(MavenPublication) {
-                    groupId project.group
-                    artifactId project.name
-                    version project.version
-                    from components.java
-                }
-            }
         }
     }
 
