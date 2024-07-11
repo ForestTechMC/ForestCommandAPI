@@ -6,12 +6,17 @@ compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
 allprojects {
-    version = '1.0.0'
+    version = '1.0.1'
     group = 'cz.foresttech'
 
     repositories {
         mavenCentral()
     }
+}
+
+build {
+    dependsOn clean
+    dependsOn jar
 }
 
 subprojects {
@@ -33,6 +38,12 @@ subprojects {
     if (!(project.name in ['shared'])) {
         dependencies {
             implementation project(':shared')
+        }
+
+        jar {
+            archiveBaseName.set(rootProject.name + '-' + project.name)
+            archiveVersion.set(version)
+            destinationDirectory.set(file("$rootDir/build/libs"))
         }
     }
 }
