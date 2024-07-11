@@ -4,6 +4,7 @@ import cz.foresttech.commandapi.shared.ArgumentTypeProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerArgumentProcessor implements ArgumentTypeProcessor<Player> {
@@ -19,6 +20,12 @@ public class PlayerArgumentProcessor implements ArgumentTypeProcessor<Player> {
             }
         }
         return player;
+    }
+
+    @Override
+    public List<String> tabComplete(String argument) {
+        //TODO?
+        return null;
     }
 
 }

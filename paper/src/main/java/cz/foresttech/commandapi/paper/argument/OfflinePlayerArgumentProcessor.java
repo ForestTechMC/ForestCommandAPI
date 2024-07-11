@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class OfflinePlayerArgumentProcessor implements ArgumentTypeProcessor<OfflinePlayer> {
@@ -31,6 +32,12 @@ public class OfflinePlayerArgumentProcessor implements ArgumentTypeProcessor<Off
         }
 
         return Bukkit.getOfflinePlayer(argument);
+    }
+
+    @Override
+    public List<String> tabComplete(String argument) {
+        //TODO?
+        return null;
     }
 
 }

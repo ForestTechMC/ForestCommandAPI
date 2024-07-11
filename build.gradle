@@ -33,6 +33,11 @@ subprojects {
         useJUnitPlatform()
     }
 
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
+    }
+
     if (!(project.name in ['shared'])) {
         apply plugin: 'com.github.johnrengelman.shadow'
 
