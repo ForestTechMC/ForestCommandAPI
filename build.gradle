@@ -1,12 +1,13 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
 allprojects {
-    version = '1.0.3'
+    version = '1.0.4'
     group = 'cz.foresttech'
 
     repositories {
@@ -31,21 +32,26 @@ subprojects {
         useJUnitPlatform()
     }
 
-    build {
-        dependsOn jar
-    }
-
     if (!(project.name in ['shared'])) {
         apply plugin: 'maven-publish'
+        apply plugin: 'com.github.johnrengelman.shadow'
 
         dependencies {
             implementation project(':shared')
         }
 
-        jar {
-            archiveBaseName.set(rootProject.name + '-' + project.name)
-            archiveVersion.set(version)
-            destinationDirectory.set(file("$rootDir/build/libs"))
+        build {
+            dependsOn shadowJar
+        }
+
+        shadowJar {
+            dependsOn(jar)
+
+            archiveFileName = "${rootProject.name}-${project.name}-${project.version}.jar"
+            archiveClassifier.set("")
+            destinationDirectory = file("$rootDir/build/libs")
+
+            configurations = [project.configurations.runtimeClasspath]
         }
 
         publishing {
