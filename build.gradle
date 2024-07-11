@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+allprojects {
+    version = '1.0-SNAPSHOT'
+    group = 'cz.foresttech'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    if (!(project.name in ['shared'])) {
+        dependencies {
+            implementation project(':shared')
+        }
+    }
+
+}
