@@ -35,5 +35,4 @@ subprojects {
             implementation project(':shared')
         }
     }
-
 }
