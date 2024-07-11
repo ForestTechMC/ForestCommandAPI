@@ -5,6 +5,7 @@
 ![badge](https://img.shields.io/github/downloads/ForestTechMC/ForestCommandAPI/total)
 ![badge](https://img.shields.io/github/last-commit/ForestTechMC/ForestCommandAPI)
 ![badge](https://img.shields.io/github/actions/workflow/status/ForestTechMC/ForestCommandAPI/release.yml)
+![badge](https://img.shields.io/codefactor/grade/github/foresttechmc/forestcommandapi)
 ![badge](https://img.shields.io/badge/platform-PaperMC-lightgrey)
 [![badge](https://img.shields.io/discord/896466173166747650?label=discord)](https://discord.gg/2PpdrfxhD4)
 [![badge](https://img.shields.io/github/license/ForestTechMC/ForestRedisAPI)](https://github.com/ForestTechMC/ForestCommandAPI/blob/master/LICENSE.txt)
