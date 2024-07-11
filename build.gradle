@@ -36,6 +36,8 @@ subprojects {
     }
 
     if (!(project.name in ['shared'])) {
+        apply plugin: 'maven-publish'
+
         dependencies {
             implementation project(':shared')
         }
@@ -44,6 +46,17 @@ subprojects {
             archiveBaseName.set(rootProject.name + '-' + project.name)
             archiveVersion.set(version)
             destinationDirectory.set(file("$rootDir/build/libs"))
+        }
+
+        publishing {
+            publications {
+                maven(MavenPublication) {
+                    groupId project.group
+                    artifactId project.name
+                    version project.version
+                    from components.java
+                }
+            }
         }
     }
 
