@@ -6,7 +6,7 @@ compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
 allprojects {
-    version = '1.0.2-SNAPSHOT'
+    version = '1.0.0-SNAPSHOT'
     group = 'cz.foresttech'
 
     repositories {
