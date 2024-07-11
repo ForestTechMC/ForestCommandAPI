@@ -26,6 +26,10 @@ subprojects {
         useJUnitPlatform()
     }
 
+    build {
+        dependsOn jar
+    }
+
     if (!(project.name in ['shared'])) {
         dependencies {
             implementation project(':shared')
