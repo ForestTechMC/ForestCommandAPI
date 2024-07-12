@@ -89,11 +89,8 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
                 if (argsTogether.toLowerCase().startsWith(name.toLowerCase()) || argsTogether.equalsIgnoreCase(name)) {
 
                     String subString = argsTogether.substring(name.length()).trim();
-                    if (subString.isBlank()) {
-                        subString = "";
-                    }
-
                     String[] argsToCheck = subString.split(" ");
+
                     long params = Arrays.stream(method.getParameters())
                             .filter(parameter -> parameter.isAnnotationPresent(Arg.class))
                             .count();
@@ -107,7 +104,7 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
                     if (parameter.isAnnotationPresent(Arg.class)) {
                         ArgumentTypeProcessor<?> processor = argumentTypeProcessorMap.get(parameter.getType());
                         if (processor != null) {
-                            List<String> result = processor.tabComplete(argsToCheck[argsToCheck.length-1]);
+                            List<String> result = processor.tabComplete(argsToCheck[argsToCheck.length - 1]);
                             if (result != null) {
                                 list.addAll(result);
                             } else {
@@ -145,7 +142,7 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
             return true;
         }
 
-        String argsTogether = String.join(" ", args);
+        String argsTogether = String.join(" ", args) + " ";
         String[] invokeArgs = null;
 
         // Check specifically declared subcommands
@@ -206,7 +203,7 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
                             Arg arg = parameter.getAnnotation(Arg.class);
                             return arg.required();
                         }
-                       return false;
+                        return false;
                     }).count();
 
             if (requiredParameters > args.length) {
@@ -307,6 +304,11 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
             return new String[0];
         }
 
+        // Remove ending whitespaces
+        if (remainingPart.endsWith(" ")) {
+            remainingPart = remainingPart.substring(0, remainingPart.length() - 1);
+        }
+
         return remainingPart.split(" ");
     }
 
@@ -339,9 +341,9 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
     }
 
     private String namesCheck(String[] names, String[] args) {
-        String mergedArgs = String.join(" ", args);
+        String mergedArgs = String.join(" ", args) + " ";
         for (String name : names) {
-            if (mergedArgs.toLowerCase().startsWith(name.toLowerCase())) {
+            if (mergedArgs.toLowerCase().startsWith(name.toLowerCase() + " ")) {
                 return name;
             }
         }

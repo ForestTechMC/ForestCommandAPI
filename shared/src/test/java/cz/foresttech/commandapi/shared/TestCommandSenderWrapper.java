@@ -8,11 +8,9 @@ public class TestCommandSenderWrapper extends AbstractCommandSenderWrapper<Strin
 
     @Override
     public void sendMessage(String message) {
-        System.out.println(message);
     }
 
     @Override
     public void sendMessageColored(String message) {
-        System.out.println(message);
     }
 }
