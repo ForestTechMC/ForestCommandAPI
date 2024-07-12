@@ -65,14 +65,6 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         return true;
     }
 
-    public void unregisterCommand(String name) {
-        commandMap.remove(name.toLowerCase());
-    }
-
-    public void unregisterArgumentTypeProcessor(Class<?> clazz) {
-        argumentTypeProcessorMap.remove(clazz);
-    }
-
     public List<String> tabComplete(T commandSender, String cmd, String[] args) {
         List<String> list = new ArrayList<>();
         CommandProcessor command = commandMap.get(cmd.toLowerCase());
@@ -89,44 +81,51 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
             }
 
             SubCommand subCommand = method.getAnnotation(SubCommand.class);
-
-            for (String name : subCommand.names()) {
-
-                if (argsTogether.toLowerCase().startsWith(name.toLowerCase()) || argsTogether.equalsIgnoreCase(name)) {
-
-                    String subString = argsTogether.substring(name.length()).trim();
-                    String[] argsToCheck = subString.split(" ");
-
-                    long params = Arrays.stream(method.getParameters())
-                            .filter(parameter -> parameter.isAnnotationPresent(Arg.class))
-                            .count();
-
-                    if (params < argsToCheck.length) {
-                        continue;
-                    }
-
-                    Parameter parameter = method.getParameters()[argsToCheck.length];
-
-                    if (parameter.isAnnotationPresent(Arg.class)) {
-                        ArgumentTypeProcessor<?> processor = argumentTypeProcessorMap.get(parameter.getType());
-                        if (processor != null) {
-                            List<String> result = processor.tabComplete(commandSender, argsToCheck[argsToCheck.length - 1]);
-                            if (result != null) {
-                                list.addAll(result);
-                            } else {
-                                Arg arg = parameter.getAnnotation(Arg.class);
-                                list.add(arg.name());
-                            }
-                        }
-                    }
-
-                } else if (name.startsWith(argsTogether)) {
-                    list.add(name);
-                }
-            }
+            extractSuggestions(commandSender, method, subCommand, argsTogether, list);
         }
 
         return list;
+    }
+
+    private void extractSuggestions(T commandSender, Method method, SubCommand subCommand, String argsTogether, List<String> list) {
+        for (String name : subCommand.names()) {
+
+            if (!argsTogether.toLowerCase().startsWith(name.toLowerCase()) && !argsTogether.equalsIgnoreCase(name)) {
+                if (name.startsWith(argsTogether)) {
+                    list.add(name);
+                }
+                continue;
+            }
+
+            String subString = argsTogether.substring(name.length()).trim();
+            String[] argsToCheck = subString.split(" ");
+
+            long params = Arrays.stream(method.getParameters())
+                    .filter(parameter -> parameter.isAnnotationPresent(Arg.class))
+                    .count();
+
+            if (params < argsToCheck.length) {
+                continue;
+            }
+
+            Parameter parameter = method.getParameters()[argsToCheck.length];
+
+            if (parameter.isAnnotationPresent(Arg.class)) {
+                ArgumentTypeProcessor<?> processor = argumentTypeProcessorMap.get(parameter.getType());
+                if (processor == null) {
+                    continue;
+                }
+
+                List<String> result = processor.tabComplete(commandSender, argsToCheck[argsToCheck.length - 1]);
+                if (result != null) {
+                    list.addAll(result);
+                } else {
+                    Arg arg = parameter.getAnnotation(Arg.class);
+                    list.add(arg.name());
+                }
+            }
+
+        }
     }
 
     public boolean onCommand(T commandSender, String cmd, String[] args) {
@@ -257,43 +256,6 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         return null;
     }
 
-    private List<Method> findMatchingSubCommands(CommandProcessor commandProcessor, String[] args) {
-        List<Method> methods = new ArrayList<>();
-        for (Method method : commandProcessor.getClass().getDeclaredMethods()) {
-            if (!method.isAnnotationPresent(SubCommand.class)) {
-                continue;
-            }
-
-            SubCommand subCommand = method.getAnnotation(SubCommand.class);
-            if (subCommand.names().length == 0) {
-                continue;
-            }
-
-            String availablePrefix = namesCheckTabComplete(subCommand.names(), args);
-            if (availablePrefix == null) {
-                continue;
-            }
-
-            long requiredParameters = Arrays.stream(method.getParameters())
-                    .filter(parameter -> {
-                        if (parameter.isAnnotationPresent(Arg.class)) {
-                            Arg arg = parameter.getAnnotation(Arg.class);
-                            return arg.required();
-                        }
-                        return false;
-                    }).count();
-
-            String[] extracted = extractArguments(method, args, String.join(" ", args));
-
-            if (requiredParameters > extracted.length) {
-                continue;
-            }
-
-            methods.add(method);
-        }
-        return methods;
-    }
-
     private String[] extractArguments(Method method, String[] args, String argsTogether) {
         if (args.length == 0 || argsTogether.isBlank()) {
             return new String[0];
@@ -351,18 +313,6 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         for (String name : names) {
             if (mergedArgs.toLowerCase().startsWith(name.toLowerCase() + " ")) {
                 return name;
-            }
-        }
-        return null;
-    }
-
-    private String namesCheckTabComplete(String[] names, String[] args) {
-        List<String> list = new ArrayList<>();
-        String mergedArgs = String.join(" ", args);
-
-        for (String name : names) {
-            if (name.toLowerCase().startsWith(mergedArgs.toLowerCase())) {
-                return mergedArgs;
             }
         }
         return null;
