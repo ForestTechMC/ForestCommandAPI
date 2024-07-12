@@ -1,6 +1,7 @@
 package cz.foresttech.commandapi.paper.argument;
 
-import cz.foresttech.commandapi.shared.ArgumentTypeProcessor;
+import cz.foresttech.commandapi.shared.AbstractCommandSenderWrapper;
+import cz.foresttech.commandapi.shared.processor.ArgumentTypeProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -11,7 +12,7 @@ import java.util.UUID;
 public class OfflinePlayerArgumentProcessor implements ArgumentTypeProcessor<OfflinePlayer> {
 
     @Override
-    public OfflinePlayer get(String argument) {
+    public <S extends AbstractCommandSenderWrapper<?>> OfflinePlayer get(S commandSender, String argument) {
         Player player = Bukkit.getPlayer(argument);
         if (player == null) {
             try {
@@ -35,8 +36,12 @@ public class OfflinePlayerArgumentProcessor implements ArgumentTypeProcessor<Off
     }
 
     @Override
-    public List<String> tabComplete(String argument) {
-        return null;
+    public <S extends AbstractCommandSenderWrapper<?>> List<String> tabComplete(S commandSender, String argument) {
+        String inLowerCase = argument.toLowerCase();
+        return Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .filter(name -> name.toLowerCase().startsWith(inLowerCase))
+                .toList();
     }
 
 }

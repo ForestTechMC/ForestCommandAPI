@@ -1,5 +1,11 @@
 package cz.foresttech.commandapi.shared;
 
+import cz.foresttech.commandapi.shared.annotation.Arg;
+import cz.foresttech.commandapi.shared.annotation.Command;
+import cz.foresttech.commandapi.shared.annotation.SubCommand;
+import cz.foresttech.commandapi.shared.processor.ArgumentTypeProcessor;
+import cz.foresttech.commandapi.shared.processor.CommandProcessor;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -104,7 +110,7 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
                     if (parameter.isAnnotationPresent(Arg.class)) {
                         ArgumentTypeProcessor<?> processor = argumentTypeProcessorMap.get(parameter.getType());
                         if (processor != null) {
-                            List<String> result = processor.tabComplete(argsToCheck[argsToCheck.length - 1]);
+                            List<String> result = processor.tabComplete(commandSender, argsToCheck[argsToCheck.length - 1]);
                             if (result != null) {
                                 list.addAll(result);
                             } else {
@@ -330,7 +336,7 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
                 }
             }
 
-            Object value = parseArgument(parameter.getType(), arg);
+            Object value = parseArgument(commandSender, parameter.getType(), arg);
             if (value == null) {
                 return null;
             }
@@ -377,12 +383,12 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         }
     }
 
-    private Object parseArgument(Class<?> clazz, String argument) {
+    private Object parseArgument(T commandSender, Class<?> clazz, String argument) {
         ArgumentTypeProcessor<?> argumentTypeProcessor = argumentTypeProcessorMap.get(clazz);
         if (argumentTypeProcessor == null) {
             return null;
         }
-        return argumentTypeProcessor.get(argument);
+        return argumentTypeProcessor.get(commandSender, argument);
     }
 
 }

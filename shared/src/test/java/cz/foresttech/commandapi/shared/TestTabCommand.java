@@ -1,7 +1,12 @@
 package cz.foresttech.commandapi.shared;
 
+import cz.foresttech.commandapi.shared.annotation.Arg;
+import cz.foresttech.commandapi.shared.annotation.Command;
+import cz.foresttech.commandapi.shared.annotation.SubCommand;
+import cz.foresttech.commandapi.shared.processor.CommandProcessor;
+
 @Command(name = "cmd")
-public class TestTabCommand implements CommandProcessor{
+public class TestTabCommand implements CommandProcessor {
 
     @SubCommand
     public void defaultSubCmd(String sender) {

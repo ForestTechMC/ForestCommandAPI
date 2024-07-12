@@ -1,4 +1,4 @@
-package cz.foresttech.commandapi.shared;
+package cz.foresttech.commandapi.shared.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
