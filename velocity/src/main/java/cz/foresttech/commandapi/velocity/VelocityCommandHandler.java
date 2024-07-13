@@ -5,6 +5,10 @@ import com.velocitypowered.api.command.SimpleCommand;
 
 import java.util.List;
 
+/**
+ * Support handler for Velocity commands as they do not include specifics about the
+ * command inside interaction methods.
+ */
 public class VelocityCommandHandler implements SimpleCommand {
 
     private final String commandName;
