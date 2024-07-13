@@ -11,9 +11,18 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
 
+/**
+ * Abstract command API handler ready to be platform-independent. Handles incoming
+ * commands and tab completion requests + keeps registered commands and argument
+ * processors.
+ *
+ * @param <T> Subclass of {@link AbstractCommandSenderWrapper} wrapping command sender object.
+ */
 public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<?>> {
 
+    // Stored commands (by name in lowercase)
     private final Map<String, CommandProcessor> commandMap;
+    // Available argument type processors (by class)
     private final Map<Class<?>, ArgumentTypeProcessor<?>> argumentTypeProcessorMap;
 
     public AbstractCommandAPI() {
@@ -27,6 +36,10 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
 
     protected abstract boolean registerToPlatform(String cmdName);
 
+    /**
+     * Method serving as platform-specific initiator, used especially for registering
+     * platform-specific argument type processors.
+     */
     protected abstract void setup();
 
     private void registerDefaultArgumentTypeProcessors() {
@@ -41,6 +54,13 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         registerArgumentTypeProcessor(Boolean.class, ArgumentTypeProcessor.BOOLEAN);
     }
 
+    /**
+     * Registers a {@link CommandProcessor} instance to the system. Allows to override
+     * already-registered command only if the {@link #registerToPlatform} method allows to.
+     *
+     * @param command {@link CommandProcessor} instance
+     * @return true if the registration was successful
+     */
     public boolean registerCommand(CommandProcessor command) {
         if (command == null) {
             return false;
@@ -56,7 +76,14 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         return registerToPlatform(commandAnnotation.name().toLowerCase());
     }
 
-    public boolean registerArgumentTypeProcessor(Class<?> clazz, ArgumentTypeProcessor<?> argumentTypeProcessor) {
+    /**
+     * Registers an {@link ArgumentTypeProcessor} for specific class.
+     *
+     * @param clazz                 Class of the argument type
+     * @param argumentTypeProcessor {@link ArgumentTypeProcessor} instance
+     * @return true if the registration was successful
+     */
+    public <A> boolean registerArgumentTypeProcessor(Class<A> clazz, ArgumentTypeProcessor<A> argumentTypeProcessor) {
         if (argumentTypeProcessor == null) {
             return false;
         }
@@ -65,6 +92,14 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         return true;
     }
 
+    /**
+     * Handles tab completion request for the given command.
+     *
+     * @param commandSender {@link T} instance
+     * @param cmd           Command name
+     * @param args          Command arguments
+     * @return List of suggestions
+     */
     public List<String> tabComplete(T commandSender, String cmd, String[] args) {
         List<String> list = new ArrayList<>();
         CommandProcessor command = commandMap.get(cmd.toLowerCase());
@@ -128,6 +163,14 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         }
     }
 
+    /**
+     * Handles incoming command.
+     *
+     * @param commandSender {@link T} instance
+     * @param cmd           Command name
+     * @param args          Command arguments
+     * @return true if the command was handled
+     */
     public boolean onCommand(T commandSender, String cmd, String[] args) {
         CommandProcessor command = commandMap.get(cmd.toLowerCase());
         if (command == null) {

@@ -4,6 +4,11 @@ import cz.foresttech.commandapi.shared.AbstractCommandSenderWrapper;
 
 import java.util.List;
 
+/**
+ * Interface for processing argument types.
+ *
+ * @param <T> Type of the argument
+ */
 public interface ArgumentTypeProcessor<T> {
 
     <S extends AbstractCommandSenderWrapper<?>> T get(S commandSender, String argument);
