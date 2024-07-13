@@ -6,7 +6,7 @@
 ![badge](https://img.shields.io/github/last-commit/ForestTechMC/ForestCommandAPI)
 ![badge](https://img.shields.io/github/actions/workflow/status/ForestTechMC/ForestCommandAPI/release.yml)
 ![badge](https://img.shields.io/codefactor/grade/github/foresttechmc/forestcommandapi)
-![badge](https://img.shields.io/badge/platform-PaperMC-lightgrey)
+![badge](https://img.shields.io/badge/platform-PaperMC%20%7C%20Velocity-lightgrey)
 [![badge](https://img.shields.io/discord/896466173166747650?label=discord)](https://discord.gg/2PpdrfxhD4)
 [![badge](https://img.shields.io/github/license/ForestTechMC/ForestRedisAPI)](https://github.com/ForestTechMC/ForestCommandAPI/blob/master/LICENSE.txt)
 
@@ -30,7 +30,7 @@ This API works as library - it does not require to install any file to the serve
 
 First, you need to setup the dependency on the ForestCommandAPI. 
 Replace **VERSION** with the version of the release.
-Replace **PLATFORM** with the name of the supported platforms (currently "paper", in the future "velocity", "spigot" and "bungeecord" will follow).
+Replace **PLATFORM** with the name of the supported platforms (currently "paper" and "velocity", in the future "spigot" and "bungeecord" will follow).
 
 <details>
     <summary>Maven</summary>
