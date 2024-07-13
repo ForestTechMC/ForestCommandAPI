@@ -28,7 +28,7 @@ This API works as library - it does not require to install any file to the serve
 
 [![badge](https://jitpack.io/v/ForestTechMC/ForestCommandAPI.svg)](https://jitpack.io/#ForestTechMC/ForestCommandAPI)
 
-First, you need to setup the dependency on the ForestCommandAPI. 
+First, you need to set up the dependency on the ForestCommandAPI. 
 Replace **VERSION** with the version of the release.
 Replace **PLATFORM** with the name of the supported platforms (currently "paper" and "velocity", in the future "spigot" and "bungeecord" will follow).
 

@@ -10,11 +10,6 @@ public class CommandSenderWrapper extends AbstractCommandSenderWrapper<CommandSe
     }
 
     @Override
-    public void sendMessage(String message) {
-        sender.sendMessage(message);
-    }
-
-    @Override
     public void sendMessageColored(String message) {
         sender.sendRichMessage(message);
     }

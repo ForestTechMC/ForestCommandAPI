@@ -17,8 +17,6 @@ public abstract class AbstractCommandSenderWrapper<T> {
         return sender;
     }
 
-    public abstract void sendMessage(String message);
-
     public abstract void sendMessageColored(String message);
 
 }

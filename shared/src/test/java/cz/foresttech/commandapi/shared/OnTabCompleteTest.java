@@ -11,13 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class OnTabCompleteTest {
 
     private TestCommandAPI testCommandAPI;
-    private TestTabCommand testCommand;
     private TestCommandSenderWrapper testCommandSenderWrapper;
 
     @BeforeEach
     public void setUp() {
         testCommandAPI = new TestCommandAPI();
-        testCommand = Mockito.mock(TestTabCommand.class);
+        TestTabCommand testCommand = Mockito.mock(TestTabCommand.class);
         testCommandSenderWrapper = new TestCommandSenderWrapper("apik007");
 
         TestArgProcessor testArgProcessor = new TestArgProcessor();

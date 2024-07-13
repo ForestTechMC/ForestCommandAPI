@@ -174,10 +174,10 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
     public boolean onCommand(T commandSender, String cmd, String[] args) {
         CommandProcessor command = commandMap.get(cmd.toLowerCase());
         if (command == null) {
-            return true;
+            return false;
         }
 
-        Method methodToInvoke = null;
+        Method methodToInvoke;
 
         // Handle no arguments case
         if (args.length == 0) {
@@ -306,6 +306,10 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
 
         SubCommand subCommand = method.getAnnotation(SubCommand.class);
         String availablePrefix = namesCheck(subCommand.names(), args);
+        if (availablePrefix == null) {
+            return new String[0];
+        }
+
         String remainingPart = argsTogether.substring(availablePrefix.length()).trim();
         if (remainingPart.startsWith(" ")) {
             remainingPart = remainingPart.substring(1);
