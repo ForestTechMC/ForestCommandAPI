@@ -1,6 +1,5 @@
 rootProject.name = 'ForestCommandAPI'
 include 'paper'
 include 'shared'
-include 'paper'
-include 'shared'
+include 'velocity'
 
