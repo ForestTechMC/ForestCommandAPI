@@ -71,9 +71,17 @@ public abstract class AbstractCommandAPI<T extends AbstractCommandSenderWrapper<
         }
 
         Command commandAnnotation = command.getClass().getAnnotation(Command.class);
-        commandMap.put(commandAnnotation.name().toLowerCase(), command);
+        String commandName = commandAnnotation.name();
+        if (commandName == null || commandName.isBlank()) {
+            return false;
+        }
 
-        return registerToPlatform(commandAnnotation.name().toLowerCase());
+        if (commandMap.containsKey(commandName.toLowerCase())) {
+            return false;
+        }
+
+        commandMap.put(commandName.toLowerCase(), command);
+        return registerToPlatform(commandName.toLowerCase());
     }
 
     /**

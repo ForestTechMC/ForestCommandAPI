@@ -16,9 +16,25 @@ Simple, but powerful annotation-based multiplatform command API inspired by many
 
 ## Table of contents
 
+* [Features](#features)
 * [Getting started](#getting-started)
 * [Usage](#usage)
 * [License](#license)
+
+## Features
+
+Those which are not marked are planned, but not ready.
+
+- [X] Annotation-based commands
+- [X] Automated argument parsing
+- [X] Automated tab-completion
+- [X] Custom argument parsers
+- [ ] BungeeCord support
+- [ ] SpigotMC support
+- [X] PaperMC support
+- [X] Velocity support
+- [ ] Automated help messages
+- [ ] Automated debug messages
 
 ## Getting started
 
@@ -70,9 +86,64 @@ dependencies {
 ```
 </details>
 
+### Setting up the API
+
+Setting up is platform specific, especially for Velocity due to its unique approach.
+
+<details>
+<summary>PaperMC</summary>
+
+Just create a new CommandAPI instance and you're good to go.
+
+```java
+@Override
+public void onEnable() {
+    /* ... your other stuff ... */
+    CommandAPI commandAPI = new CommandAPI(this);
+    /* ... your other stuff ... */
+}
+```
+</details>
+
+<details>
+<summary>Velocity</summary>
+
+This is a bit tricky as internal API structure requires ProxyServer to be
+accessible from within.
+
+```java
+// You need to implement ProxyServerProvider to allow CommandAPI to access the
+// ProxyServer instance
+@Plugin(/* your stuff here*/)
+public class VelocityPlugin implements ProxyServerProvider {
+
+    private final ProxyServer proxyServer;
+    
+    @Inject
+    public VelocityPlugin(ProxyServer proxyServer /* ... and your other stuff...*/) {
+        this.proxyServer = proxyServer;
+        /* ... your other stuff... */
+    }
+
+    @Subscribe
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+        /* ... your other stuff ... */
+        CommandAPI commandAPI = new CommandAPI(this);
+        /* ... your other stuff ... */
+    }
+
+    // Implementing #getProxyServer to provide ProxyServer instance
+    @Override
+    public void getProxyServer() {
+        return proxyServer;
+    }
+}
+```
+</details>
+
 ## Usage
 
-MyCommand.java
+Making command class
 ```java
 // Use onEnable or similar method based on the platform
 @Command(name = "mycmd")
@@ -96,14 +167,10 @@ public class MyCommand implements CommandProcessor {
 }
 ```
 
-Main.java
+Registering the command
 ```java
-// Use onEnable or similar method based on the platform
-@Override
-public void onEnable() {
-    CommandAPI commandAPI = new CommandAPI(this); // plugin main as the argument
-    
-}
+CommandAPI commandAPI = new CommandAPI(pluginMain); // plugin main as the argument
+commandAPI.registerCommand(new MyCommand());
 ```
 
 ## License
